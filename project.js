@@ -107,13 +107,53 @@ const printRows = (rows) => {
 
 
 
-}
+};
+const getWinnings =(rows, bet, lines) => {
+    let winings = 0;
+    
+    for(row = 0; row < lines; row++){
+        const symbols = rows[row];
+        let allSame = true;
 
-let balance = deposit();
+        for(const symbol of symbols){
+            if(symbol != symbols[0]){
+                allSame = false;
+                break;
+
+            }
+
+        }
+        if(allSame){
+            winings += bet * SYMBOL_VALUES[symbols[0]]
+        }
+    }
+    return winings;
+
+
+};
+const game = () => {
+    let balance = deposit();
+    while(true){
+        console.log("You have a balance of $" + balance);
  const numberOfLines = getnumberOfLines();
  const bet =getbet(balance, numberOfLines);
+ balance -= bet * numberOfLines;
  const reels = spin();
  const rows = transpose(reels);
  console.log(reels);
  console.log(rows);
  printRows(rows);
+ const winnings = getWinnings(rows, bet, numberOfLines);
+ balance += winnings;
+ console.log("you won, $" + winnings.toString());
+ if(balance <= 0){
+    console.log("You ran out of money!");
+    break;
+ }
+ const playAgain = prompt("Do you want to play again (y/n)");
+ if(playAgain != "y")break;
+    }
+
+};
+game();
+
